@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Visual Test</title>
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <!-- Prism CSS (Okaidia) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet" />
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            padding: 20px;
+            background: #1e1e1e;
+            color: #fff;
+        }
+
+        .test-case {
+            margin-bottom: 20px;
+            border: 1px solid #333;
+            padding: 10px;
+        }
+
+        h3 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Syntax Highlighting Visual Test</h1>
+
+    <div class="test-case">
+        <h3>Python</h3>
+        <pre><code class="language-python">def hello():
+    print("Hello World")
+    return True</code></pre>
+    </div>
+
+    <div class="test-case">
+        <h3>C#</h3>
+        <pre><code class="language-csharp">using System;
+public class Program {
+    public static void Main() {
+        Console.WriteLine("Hello");
+    }
+}</code></pre>
+    </div>
+
+    <div class="test-case">
+        <h3>JSON</h3>
+        <pre><code class="language-json">{
+  "key": "value",
+  "number": 123,
+  "bool": true
+}</code></pre>
+    </div>
+
+    <div class="test-case">
+        <h3>YAML</h3>
+        <pre><code class="language-yaml">version: '3'
+services:
+  web:
+    image: nginx:alpine
+    ports:
+      - "80:80"</code></pre>
+    </div>
+
+    <div class="test-case">
+        <h3>XML / HTML</h3>
+        <pre><code class="language-html">&lt;div class="container"&gt;
+  &lt;h1&gt;Hello World&lt;/h1&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+
+    <div class="test-case">
+        <h3>CSS</h3>
+        <pre><code class="language-css">body {
+  background-color: #f0f0f0;
+  color: #333;
+}</code></pre>
+    </div>
+
+    <div class="test-case">
+        <h3>JavaScript</h3>
+        <pre><code class="language-javascript">const greet = (name) => {
+  console.log(`Hello, ${name}!`);
+};</code></pre>
+    </div>
+
+    <div class="test-case">
+        <h3>Dockerfile</h3>
+        <pre><code class="language-docker">FROM node:14
+WORKDIR /app
+COPY . .
+RUN npm install
+CMD ["npm", "start"]</code></pre>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-docker.min.js"></script>
+</body>
+
+</html>

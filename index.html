@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modern File Viewer</title>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <!-- Prism CSS (Okaidia) -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet" />
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="prism-log.css">
+</head>
+
+<body>
+
+  <!-- Sidebar -->
+  <div id="sidebar">
+    <div class="sidebar-header">
+      <span>Explorer</span>
+    </div>
+    <ul id="fileList">
+      <li class="empty-msg">No folder open</li>
+    </ul>
+    <div class="sidebar-header">
+      <span>Recent Folders</span>
+    </div>
+    <ul id="recentList"></ul>
+  </div>
+
+  <!-- Main Content -->
+  <div id="main">
+    <div id="toolbar">
+      <button id="btnOpen" class="btn btn-primary">Open Folder</button>
+      <input type="text" id="searchBar" placeholder="Filter files..." style="display:none;">
+      <span id="fileInfo"></span>
+      <button id="btnLive" class="btn">Live: Off</button>
+      <button id="btnEditMode" class="btn">Edit Mode</button>
+      <button id="btnSave" class="btn btn-primary" style="display: none;">Save</button>
+      <a href="diff/index.html" class="btn" style="text-decoration: none; display: inline-block;">Diff Viewer</a>
+      <a href="md/index.html" class="btn" style="text-decoration: none; display: inline-block;">Markdown Viewer</a>
+      <a href="comment/index.html" class="btn" style="text-decoration: none; display: inline-block;">Comment
+        Formatter</a>
+    </div>
+
+    <div id="editorContainer">
+      <div id="lineNumbers"></div>
+      <!-- Read-only view -->
+      <div id="codeWrapper">
+        <pre><code id="codeContent" class="language-none"></code></pre>
+      </div>
+      <!-- Edit mode view -->
+      <textarea id="codeEditor" class="code-editor" style="display: none;" spellcheck="false"></textarea>
+      <div id="dragOverlay">Drop folder to open</div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <!-- Common Languages (Explicit Load) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-csharp.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
+  <!-- Extended Languages -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+  <!-- For XML/HTML -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-docker.min.js"></script>
+  <script src="prism-log.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>

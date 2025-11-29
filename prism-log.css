@@ -1,0 +1,111 @@
+/* Custom styles for log file syntax highlighting */
+/* Using higher specificity and !important to override Prism defaults */
+
+/* Verbose level - gray/muted */
+.language-log .token.level-verbose,
+code.language-log .token.level-verbose {
+    color: #858585 !important;
+    font-weight: 500 !important;
+    background: none !important;
+}
+
+/* Debug level - cyan */
+.language-log .token.level-debug,
+code.language-log .token.level-debug {
+    color: #4ec9b0 !important;
+    font-weight: 500 !important;
+    background: none !important;
+}
+
+/* Info level - bright blue */
+.language-log .token.level-info,
+code.language-log .token.level-info {
+    color: #569cd6 !important;
+    font-weight: 600 !important;
+    background: none !important;
+}
+
+/* Warning level - yellow/orange */
+.language-log .token.level-warning,
+code.language-log .token.level-warning {
+    color: #dcdcaa !important;
+    font-weight: 600 !important;
+    background: none !important;
+}
+
+/* Error level - red */
+.language-log .token.level-error,
+code.language-log .token.level-error {
+    color: #f48771 !important;
+    font-weight: 700 !important;
+    background: none !important;
+}
+
+/* Fatal level - bright red/magenta */
+.language-log .token.level-fatal,
+code.language-log .token.level-fatal {
+    color: #ff6b9d !important;
+    font-weight: 700 !important;
+    text-decoration: underline !important;
+    background: none !important;
+}
+
+/* Timestamp */
+.language-log .token.timestamp,
+code.language-log .token.timestamp {
+    color: #b5cea8 !important;
+    background: none !important;
+}
+
+/* Exception stack traces */
+.language-log .token.exception,
+code.language-log .token.exception {
+    color: #ce9178 !important;
+    font-style: italic !important;
+    background: none !important;
+}
+
+/* Thread/Request IDs */
+.language-log .token.thread-id,
+code.language-log .token.thread-id {
+    color: #9cdcfe !important;
+    background: none !important;
+}
+
+/* Serilog properties {PropertyName} */
+.language-log .token.property,
+code.language-log .token.property {
+    color: #c586c0 !important;
+    background: none !important;
+}
+
+/* URLs */
+.language-log .token.url,
+code.language-log .token.url {
+    color: #3794ff !important;
+    text-decoration: underline !important;
+    background: none !important;
+}
+
+/* File paths */
+.language-log .token.path,
+code.language-log .token.path {
+    color: #d7ba7d !important;
+    background: none !important;
+}
+
+/* IP addresses and numbers */
+.language-log .token.ip,
+.language-log .token.number,
+code.language-log .token.ip,
+code.language-log .token.number {
+    color: #b5cea8 !important;
+    background: none !important;
+}
+
+/* Strings */
+.language-log .token.string,
+code.language-log .token.string {
+    color: #ce9178 !important;
+    background: none !important;
+}

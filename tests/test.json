@@ -1,0 +1,10 @@
+{
+  "name": "Test JSON",
+  "version": 1.0,
+  "features": [
+    "Syntax Highlighting",
+    "Live Mode",
+    "Dark Theme"
+  ],
+  "active": true
+}

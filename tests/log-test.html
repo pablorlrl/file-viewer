@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Syntax Test</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="prism-log.css">
+    <style>
+        body {
+            background: #1e1e1e;
+            color: #ccc;
+            font-family: 'Consolas', monospace;
+            padding: 20px;
+        }
+
+        pre {
+            background: #272822;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Serilog Syntax Highlighting Test</h1>
+    <pre><code class="language-log">[12:45:23.456 VRB] Verbose logging enabled for {Component}
+[12:45:23.789 DBG] Configuration loaded from {ConfigPath}
+[12:45:24.012 INF] Application starting up
+[12:45:24.234 WRN] Cache miss for key {CacheKey}
+[12:45:25.567 ERR] Failed to process request {RequestId}
+System.InvalidOperationException: The operation is not valid
+   at MyApp.Services.DataService.ProcessRequest(String requestId)
+[12:45:26.890 FTL] Critical system failure in {SystemComponent}</code></pre>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="prism-log.js"></script>
+</body>
+
+</html>

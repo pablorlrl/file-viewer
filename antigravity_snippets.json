@@ -1,0 +1,14 @@
+{
+  "AG: Minimal Code Edit": {
+    "prefix": "ag-edit",
+    "body": [
+      "Task: ${1:Describe the specific code change}",
+      "",
+      "Constraints:",
+      "- Use lowest-cost model.",
+      "- Output ONLY changed code blocks or unified diff.",
+      "- Do NOT repeat full files.",
+      ""
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+# Antigravity Project Configuration
+
+[model]
+default_mode = low
+
+[output]
+prefer_diffs = true
+suppress_restatements = true
+max_explanation_length = short
+
+[context]
+auto_include_project_summary = false
+allow_code_echo = false
+
+[interaction]
+ask_before_analyzing_large_files = true
+scope_default_to_current_file = true
+
+[optimizations]
+compact_data_serialization = true
+batch_related_tasks = true

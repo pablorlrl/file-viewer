@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comment Formatter - File Viewer</title>
+    <meta name="description"
+        content="Format plain text into styled code comments with customizable prefixes, suffixes, and decorators">
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="comment.css">
+</head>
+
+<body>
+
+    <div id="comment-container">
+        <div id="comment-header">
+            <a href="../index.html" class="btn">← Back to Explorer</a>
+            <h1>Comment Formatter</h1>
+            <div class="header-controls">
+                <button id="btnFormat" class="btn btn-primary">Format</button>
+                <button id="btnCopy" class="btn">Copy Output</button>
+            </div>
+        </div>
+
+        <div id="comment-controls">
+            <div class="control-group">
+                <label>Comment Style</label>
+                <select id="styleSelect">
+                    <option value="slashes">// Slashes</option>
+                    <option value="hash"># Hash</option>
+                    <option value="block">/* Block */</option>
+                    <option value="html">&lt;!-- HTML --&gt;</option>
+                    <option value="xml">&lt;!-- XML --&gt;</option>
+                    <option value="sql">-- SQL</option>
+                    <option value="custom">Custom</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>Decorator Character</label>
+                <input type="text" id="decoratorChar" value="-" maxlength="1" placeholder="-">
+            </div>
+
+            <div class="control-group">
+                <label>Decorator Count</label>
+                <input type="number" id="decoratorCount" value="4" min="0" max="50">
+            </div>
+
+            <div class="control-group">
+                <label>Spacing</label>
+                <select id="spacingSelect">
+                    <option value="both">Both Sides</option>
+                    <option value="left">Left Only</option>
+                    <option value="right">Right Only</option>
+                    <option value="none">No Spacing</option>
+                </select>
+            </div>
+
+            <div class="control-group custom-controls" style="display: none;">
+                <label>Custom Prefix</label>
+                <input type="text" id="customPrefix" placeholder="//">
+            </div>
+
+            <div class="control-group custom-controls" style="display: none;">
+                <label>Custom Suffix</label>
+                <input type="text" id="customSuffix" placeholder="">
+            </div>
+
+            <div class="control-group">
+                <label>
+                    <input type="checkbox" id="upperCase">
+                    UPPERCASE TEXT
+                </label>
+            </div>
+        </div>
+
+        <div id="comment-panels">
+            <div class="panel">
+                <div class="panel-header">
+                    <span>Input Text</span>
+                    <span class="panel-info" id="lineCount">0 lines</span>
+                </div>
+                <div class="textarea-container">
+                    <div class="textarea-line-numbers" id="inputLineNumbers">1</div>
+                    <textarea id="commentInput" placeholder="Enter your text here...
+Each line will be formatted as a separate comment"></textarea>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="panel-header">
+                    <span>Formatted Output</span>
+                    <span class="panel-info" id="outputInfo">Ready</span>
+                </div>
+                <div class="textarea-container">
+                    <div class="textarea-line-numbers" id="outputLineNumbers">1</div>
+                    <textarea id="commentOutput" readonly
+                        placeholder="Formatted comments will appear here..."></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="comment.js"></script>
+</body>
+
+</html>

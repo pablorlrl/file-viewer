@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Debug Log Highlighting</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../prism-log.css">
+    <style>
+        body {
+            background: #1e1e1e;
+            color: #ccc;
+            padding: 20px;
+            font-family: monospace;
+        }
+
+        pre {
+            background: #272822;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        .debug {
+            background: #333;
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 3px solid #4caf50;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Debug: Log Syntax Highlighting</h1>
+
+    <div class="debug">
+        <h3>Step 1: Check if Prism is loaded</h3>
+        <p id="prism-check">Checking...</p>
+    </div>
+
+    <div class="debug">
+        <h3>Step 2: Check if log language is registered</h3>
+        <p id="log-lang-check">Checking...</p>
+    </div>
+
+    <div class="debug">
+        <h3>Step 3: Sample log with highlighting</h3>
+        <pre><code id="log-sample" class="language-log">[12:45:23.456 VRB] Verbose message
+[12:45:23.789 DBG] Debug message  
+[12:45:24.012 INF] Info message
+[12:45:24.234 WRN] Warning message
+[12:45:25.567 ERR] Error message
+[12:45:26.890 FTL] Fatal message</code></pre>
+    </div>
+
+    <div class="debug">
+        <h3>Step 4: Inspect HTML after highlighting</h3>
+        <button onclick="showHTML()">Show HTML Structure</button>
+        <pre id="html-output" style="font-size: 11px; max-height: 300px; overflow: auto;"></pre>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="../prism-log.js"></script>
+    <script>
+        // Check 1: Prism loaded
+        document.getElementById('prism-check').textContent =
+            typeof Prism !== 'undefined' ? '✅ Prism is loaded' : '❌ Prism is NOT loaded';
+
+        // Check 2: Log language registered
+        setTimeout(() => {
+            const logLang = Prism.languages.log;
+            document.getElementById('log-lang-check').textContent =
+                logLang ? '✅ Log language is registered' : '❌ Log language is NOT registered';
+
+            if (logLang) {
+                console.log('Log language definition:', logLang);
+            }
+        }, 100);
+
+        // Function to show HTML structure
+        function showHTML() {
+            const code = document.getElementById('log-sample');
+            const html = code.innerHTML;
+            document.getElementById('html-output').textContent = html;
+        }
+    </script>
+</body>
+
+</html>

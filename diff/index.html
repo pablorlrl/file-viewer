@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diff Viewer - File Viewer</title>
+    <meta name="description"
+        content="Compare and visualize differences between two text files with line numbers and side-by-side view">
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="diff.css">
+</head>
+
+<body>
+
+    <div id="diff-container">
+        <div id="diff-header">
+            <a href="../index.html" class="btn">← Back to Explorer</a>
+            <h1>Diff Viewer</h1>
+            <div class="header-controls">
+                <button id="btnViewMode" class="btn">Split View</button>
+                <button id="btnCompare" class="btn btn-primary">Compare</button>
+            </div>
+        </div>
+
+        <div id="diff-inputs">
+            <div class="input-group">
+                <label>Original Text</label>
+                <div class="textarea-container">
+                    <div class="textarea-line-numbers" id="originalInputLineNumbers">1</div>
+                    <textarea id="inputOriginal" placeholder="Paste original text here..."></textarea>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Modified Text</label>
+                <div class="textarea-container">
+                    <div class="textarea-line-numbers" id="modifiedInputLineNumbers">1</div>
+                    <textarea id="inputModified" placeholder="Paste modified text here..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div id="diff-output-container">
+            <!-- Unified View -->
+            <div id="unified-view" class="diff-view">
+                <div class="empty-state">Click "Compare" to see differences.</div>
+            </div>
+
+            <!-- Split View -->
+            <div id="split-view" class="diff-view" style="display: none;">
+                <div class="split-pane">
+                    <div class="pane-header">Original</div>
+                    <div class="pane-content">
+                        <div class="line-numbers" id="originalLineNumbers"></div>
+                        <div class="code-content" id="originalContent"></div>
+                    </div>
+                </div>
+                <div class="split-pane">
+                    <div class="pane-header">Modified</div>
+                    <div class="pane-content">
+                        <div class="line-numbers" id="modifiedLineNumbers"></div>
+                        <div class="code-content" id="modifiedContent"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsdiff/5.1.0/diff.min.js"></script>
+    <script src="diff.js"></script>
+</body>
+
+</html>

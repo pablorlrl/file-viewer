@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown Viewer - File Viewer</title>
+    <meta name="description" content="Live markdown editor with real-time preview and syntax highlighting">
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <!-- Marked.js for Markdown Parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
+    <!-- Prism for Syntax Highlighting in Preview -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="md.css">
+</head>
+
+<body>
+
+    <div id="md-container">
+        <div id="md-header">
+            <a href="../index.html" class="btn">← Back to Explorer</a>
+            <h1>Markdown Viewer</h1>
+            <div class="header-controls">
+                <button id="btnClear" class="btn">Clear</button>
+                <button id="btnSample" class="btn">Load Sample</button>
+            </div>
+        </div>
+
+        <div id="md-panels">
+            <div class="panel">
+                <div class="panel-header">
+                    <span>Input</span>
+                    <span class="panel-info" id="charCount">0 characters</span>
+                </div>
+                <div class="textarea-container">
+                    <div class="textarea-line-numbers" id="inputLineNumbers">1</div>
+                    <textarea id="mdInput" placeholder="Type or paste your markdown here..."></textarea>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="panel-header">
+                    <span>Preview</span>
+                    <span class="panel-info" id="wordCount">0 words</span>
+                </div>
+                <div id="mdPreview" class="preview-content">
+                    <div class="empty-state">Start typing to see the preview...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="md.js"></script>
+</body>
+
+</html>

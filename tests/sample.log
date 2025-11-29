@@ -1,0 +1,16 @@
+[12:45:23.456 INF] Application starting up
+[12:45:23.789 DBG] Configuration loaded from {ConfigPath}
+[12:45:24.012 VRB] Verbose logging enabled for {Component}
+[12:45:24.234 INF] Database connection established to {ConnectionString}
+[12:45:25.567 WRN] Cache miss for key {CacheKey}, fetching from database
+[12:45:26.890 ERR] Failed to process request {RequestId}
+System.InvalidOperationException: The operation is not valid
+   at MyApp.Services.DataService.ProcessRequest(String requestId) in C:\Projects\MyApp\Services\DataService.cs:line 42
+   at MyApp.Controllers.ApiController.HandleRequest() in C:\Projects\MyApp\Controllers\ApiController.cs:line 89
+[12:45:27.123 FTL] Critical system failure in {SystemComponent}
+[12:45:27.456 INF] Request completed in {ElapsedMs}ms with status {StatusCode}
+[12:45:28.789 DBG] User {UserId} authenticated from IP 192.168.1.100
+[12:45:29.012 INFO] Processing batch of {BatchSize} items
+[12:45:30.234 WARNING] High memory usage detected: {MemoryUsageMB}MB
+[12:45:31.567 ERROR] Connection timeout to https://api.example.com/endpoint
+[12:45:32.890 VERBOSE] Detailed trace information for debugging
