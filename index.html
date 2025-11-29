@@ -11,11 +11,8 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
     rel="stylesheet">
-  <!-- Prism CSS (Okaidia) -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet" />
   <!-- Custom Styles -->
   <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="prism-log.css">
 </head>
 
 <body>
@@ -41,7 +38,6 @@
       <input type="text" id="searchBar" placeholder="Filter files..." style="display:none;">
       <span id="fileInfo"></span>
       <button id="btnLive" class="btn">Live: Off</button>
-      <button id="btnEditMode" class="btn">Edit Mode</button>
       <button id="btnSave" class="btn btn-primary" style="display: none;">Save</button>
       <a href="diff/index.html" class="btn" style="text-decoration: none; display: inline-block;">Diff Viewer</a>
       <a href="md/index.html" class="btn" style="text-decoration: none; display: inline-block;">Markdown Viewer</a>
@@ -50,37 +46,15 @@
     </div>
 
     <div id="editorContainer">
-      <div id="lineNumbers"></div>
-      <!-- Read-only view -->
-      <div id="codeWrapper">
-        <pre><code id="codeContent" class="language-none"></code></pre>
-      </div>
-      <!-- Edit mode view -->
-      <textarea id="codeEditor" class="code-editor" style="display: none;" spellcheck="false"></textarea>
+      <div id="editor"></div>
       <div id="dragOverlay">Drop folder to open</div>
     </div>
   </div>
 
-  <!-- Scripts -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-  <!-- Common Languages (Explicit Load) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-csharp.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
-  <!-- Extended Languages -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
-  <!-- For XML/HTML -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-docker.min.js"></script>
-  <script src="prism-log.js"></script>
-  <script src="app.js"></script>
+  <!-- Ace Editor (works with file:// protocol) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/ace.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/ext-language_tools.js"></script>
+  <script src="app-ace.js"></script>
 </body>
 
 </html>

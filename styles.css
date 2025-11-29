@@ -195,55 +195,22 @@ body {
   background-color: var(--bg-root);
 }
 
-#lineNumbers {
-  width: 60px;
-  background-color: var(--bg-root);
-  color: #6e7681;
-  text-align: right;
-  padding: 10px 15px 10px 0;
-  user-select: none;
-  border-right: 1px solid var(--border);
-  overflow: hidden;
-  flex-shrink: 0;
-  white-space: pre;
-  font-family: var(--font-code);
-  font-size: 14px;
-  line-height: var(--line-height);
-}
-
-#codeWrapper {
+#editor {
   flex: 1;
-  overflow: auto;
-  padding: 10px;
+  height: 100%;
+  width: 100%;
 }
 
-/* Reset Prism defaults and ensure line alignment */
-pre[class*="language-"],
-code[class*="language-"] {
-  margin: 0 !important;
-  padding: 0 !important;
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
+/* Ace Editor overrides */
+.ace_editor {
   font-family: var(--font-code) !important;
   font-size: 14px !important;
-  line-height: var(--line-height) !important;
-  white-space: pre !important;
-  word-wrap: normal !important;
-  word-break: normal !important;
 }
 
-#codeContent {
-  display: block;
-  min-height: 100%;
-  tab-size: 4;
-  white-space: pre;
-}
-
-/* Ensure all Prism tokens maintain line alignment */
-code[class*="language-"] * {
-  line-height: inherit !important;
-  white-space: inherit !important;
+.ace_gutter {
+  background-color: var(--bg-root) !important;
+  color: #6e7681 !important;
+  border-right: 1px solid var(--border) !important;
 }
 
 /* Scrollbars */
@@ -294,30 +261,7 @@ body.dragging #dragOverlay {
   display: flex;
 }
 
-/* Code Editor (Edit Mode) */
-.code-editor {
-  flex: 1;
-  background-color: var(--bg-root);
-  color: var(--fg-primary);
-  font-family: var(--font-code);
-  font-size: 14px;
-  line-height: var(--line-height);
-  padding: 10px;
-  border: none;
-  outline: none;
-  resize: none;
-  tab-size: 4;
-  white-space: pre;
-  overflow-wrap: normal;
-  overflow-x: auto;
-}
-
-.code-editor:focus {
-  outline: 2px solid var(--accent);
-  outline-offset: -2px;
-}
-
-/* Unsaved changes indicator */
+/* Save button pulse animation */
 .btn-primary.unsaved {
   animation: pulse 2s ease-in-out infinite;
 }
