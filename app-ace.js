@@ -110,7 +110,7 @@ function getAceMode(filename) {
         'bash': 'sh',
         'sql': 'sql',
         'txt': 'text',
-        'log': 'text'
+        'log': 'log'  // Use custom log mode
     };
 
     return modeMap[ext] || 'text';
@@ -144,6 +144,10 @@ function createEditor(content, filename) {
 
     // Set content
     editor.setValue(content, -1); // -1 moves cursor to start
+
+    // Force editor to resize and recalculate positions (fixes cursor offset bug)
+    editor.resize();
+    editor.renderer.updateFull();
 
     // Store original content
     originalFileContent = content;
@@ -254,13 +258,18 @@ function renderFileTree(tree, parentElement = null, level = 0) {
             li.appendChild(icon);
             li.appendChild(folderName);
 
+            // Generate unique ID for this folder
+            const folderId = `folder-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+            li.dataset.folderId = folderId;
+
             li.onclick = (e) => {
                 e.stopPropagation();
                 item.expanded = !item.expanded;
                 icon.textContent = item.expanded ? '▼' : '▶';
 
+                // Remove only children belonging to THIS folder
                 let nextSibling = li.nextSibling;
-                while (nextSibling && nextSibling.classList.contains('tree-child')) {
+                while (nextSibling && nextSibling.dataset && nextSibling.dataset.parentFolderId === folderId) {
                     const toRemove = nextSibling;
                     nextSibling = nextSibling.nextSibling;
                     toRemove.remove();
@@ -271,8 +280,10 @@ function renderFileTree(tree, parentElement = null, level = 0) {
                     childrenContainer.className = 'tree-children';
                     renderFileTree(item.children, childrenContainer, level + 1);
 
-                    childrenContainer.querySelectorAll('li').forEach(child => {
-                        child.classList.add('tree-child');
+                    // Mark children with parent folder ID and insert them
+                    const childElements = Array.from(childrenContainer.querySelectorAll('li'));
+                    childElements.reverse().forEach(child => {
+                        child.dataset.parentFolderId = folderId;
                         li.parentNode.insertBefore(child, li.nextSibling);
                     });
                 }

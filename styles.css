@@ -277,3 +277,62 @@ body.dragging #dragOverlay {
     opacity: 0.7;
   }
 }
+
+/* Log file syntax highlighting */
+.ace_constant.ace_language.ace_fatal {
+  color: #ff6b9d !important;
+  font-weight: 700 !important;
+  text-decoration: underline !important;
+}
+
+.ace_constant.ace_language.ace_error {
+  color: #f48771 !important;
+  font-weight: 700 !important;
+}
+
+.ace_constant.ace_language.ace_warning {
+  color: #dcdcaa !important;
+  font-weight: 600 !important;
+}
+
+.ace_constant.ace_language.ace_info {
+  color: #569cd6 !important;
+  font-weight: 600 !important;
+}
+
+.ace_constant.ace_language.ace_debug {
+  color: #4ec9b0 !important;
+  font-weight: 500 !important;
+}
+
+.ace_constant.ace_language.ace_verbose {
+  color: #858585 !important;
+  font-weight: 500 !important;
+}
+
+.ace_constant.ace_language.ace_success {
+  color: #4caf50 !important;
+  font-weight: 600 !important;
+}
+
+.ace_constant.ace_numeric.ace_timestamp {
+  color: #b5cea8 !important;
+}
+
+.ace_variable.ace_parameter {
+  color: #c586c0 !important;
+}
+
+.ace_comment.ace_line.ace_exception {
+  color: #ce9178 !important;
+  font-style: italic !important;
+}
+
+.ace_string.ace_url {
+  color: #3794ff !important;
+  text-decoration: underline !important;
+}
+
+.ace_constant.ace_numeric.ace_ip {
+  color: #b5cea8 !important;
+}
