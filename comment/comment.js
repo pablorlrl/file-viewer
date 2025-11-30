@@ -227,3 +227,9 @@ End of Block`;
 commentInput.value = sampleText;
 handleInput();
 formatComments();
+
+// Ensure both areas start at the top
+commentInput.scrollTop = 0;
+commentOutput.scrollTop = 0;
+inputLineNumbers.scrollTop = 0;
+outputLineNumbers.scrollTop = 0;

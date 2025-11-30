@@ -11,7 +11,7 @@ body {
     flex-direction: column;
     height: 100vh;
     width: 100vw;
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    background-color: #1e1e1e;
     color: #e0e0e0;
     font-family: 'Inter', sans-serif;
 }
@@ -31,10 +31,7 @@ body {
     margin: 0;
     font-size: 1.5rem;
     font-weight: 600;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #cccccc;
 }
 
 .header-controls {
@@ -55,7 +52,7 @@ body {
 .panel {
     display: flex;
     flex-direction: column;
-    background: #1a1a2e;
+    background-color: #252526;
     overflow: hidden;
 }
 

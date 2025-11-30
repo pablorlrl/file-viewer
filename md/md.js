@@ -182,3 +182,8 @@ renderMarkdown();
 if (mdInput.value.trim() === '') {
     handleLoadSample();
 }
+
+// Ensure both areas start at the top
+mdInput.scrollTop = 0;
+mdPreview.scrollTop = 0;
+inputLineNumbers.scrollTop = 0;
