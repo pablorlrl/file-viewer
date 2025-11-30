@@ -164,6 +164,27 @@ function checkForChanges() {
     if (hasUnsavedChanges) {
         els.btnSave.style.display = 'inline-block';
         els.btnSave.classList.add('unsaved');
+
+        // Auto-disable Live mode when editing to prevent losing changes
+        if (liveMode) {
+            liveMode = false;
+            els.btnLive.textContent = 'Live: Off';
+            els.btnLive.classList.remove('active');
+            if (liveInterval) clearInterval(liveInterval);
+
+            // Show notification
+            const originalInfo = els.fileInfo.textContent;
+            const originalColor = els.fileInfo.style.color;
+            els.fileInfo.textContent = 'Live mode disabled - unsaved changes';
+            els.fileInfo.style.color = '#dcdcaa';
+
+            setTimeout(() => {
+                if (els.fileInfo.textContent === 'Live mode disabled - unsaved changes') {
+                    els.fileInfo.textContent = originalInfo;
+                    els.fileInfo.style.color = originalColor;
+                }
+            }, 3000);
+        }
     } else {
         els.btnSave.style.display = 'none';
         els.btnSave.classList.remove('unsaved');
@@ -354,6 +375,52 @@ async function saveFile() {
             return;
         }
 
+        // Check if file was modified externally before saving
+        const currentFile = await currentFileHandle.getFile();
+        if (currentFile.lastModified > currentFileLastModified) {
+            // File was modified externally!
+            const externalContent = await currentFile.text();
+
+            // Check if external content is different from what we're about to save
+            const ourContent = editor.getValue();
+            if (externalContent !== ourContent) {
+                const confirmOverwrite = confirm(
+                    '⚠️ WARNING: This file was modified externally!\n\n' +
+                    'Another program has changed this file since you opened it.\n\n' +
+                    'If you save now, you will OVERWRITE those external changes.\n\n' +
+                    'Options:\n' +
+                    '• Click OK to OVERWRITE external changes with your version\n' +
+                    '• Click Cancel to keep the external version (you will lose your edits)\n\n' +
+                    'Do you want to OVERWRITE the external changes?'
+                );
+
+                if (!confirmOverwrite) {
+                    // User chose to keep external version - reload it
+                    editor.setValue(externalContent, -1);
+                    editor.resize();
+                    editor.renderer.updateFull();
+                    originalFileContent = externalContent;
+                    hasUnsavedChanges = false;
+                    currentFileLastModified = currentFile.lastModified;
+                    els.btnSave.style.display = 'none';
+                    els.btnSave.classList.remove('unsaved');
+
+                    // Show notification
+                    const originalInfo = els.fileInfo.textContent;
+                    els.fileInfo.textContent = 'Reloaded external changes - your edits were discarded';
+                    els.fileInfo.style.color = '#dcdcaa';
+
+                    setTimeout(() => {
+                        els.fileInfo.textContent = originalInfo;
+                        els.fileInfo.style.color = '';
+                    }, 3000);
+
+                    return;
+                }
+                // User chose to overwrite - continue with save
+            }
+        }
+
         const newContent = editor.getValue();
         const writable = await currentFileHandle.createWritable();
         await writable.write(newContent);
@@ -362,6 +429,11 @@ async function saveFile() {
         // Update state
         originalFileContent = newContent;
         hasUnsavedChanges = false;
+
+        // Update last modified time to the new file's timestamp
+        const savedFile = await currentFileHandle.getFile();
+        currentFileLastModified = savedFile.lastModified;
+
         els.btnSave.style.display = 'none';
         els.btnSave.classList.remove('unsaved');
 
