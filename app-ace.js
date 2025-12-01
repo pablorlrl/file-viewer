@@ -12,6 +12,7 @@ let allFiles = []; // Array of {name, handle}
 let editor = null;
 let originalFileContent = '';
 let hasUnsavedChanges = false;
+let currentFontSize = 14;
 
 // --- DOM Elements ---
 const els = {
@@ -23,7 +24,14 @@ const els = {
     fileInfo: document.getElementById('fileInfo'),
     dragOverlay: document.getElementById('dragOverlay'),
     btnSave: document.getElementById('btnSave'),
-    editorContainer: document.getElementById('editor')
+    editorContainer: document.getElementById('editor'),
+    btnTools: document.getElementById('btnTools'),
+    dropdownTools: document.getElementById('dropdownTools'),
+    btnSettings: document.getElementById('btnSettings'),
+    dropdownSettings: document.getElementById('dropdownSettings'),
+    btnFontInc: document.getElementById('btnFontInc'),
+    btnFontDec: document.getElementById('btnFontDec'),
+    fontSizeDisplay: document.getElementById('fontSizeDisplay')
 };
 
 // --- IndexedDB Helper ---
@@ -124,7 +132,7 @@ function createEditor(content, filename) {
         editor = ace.edit("editor");
         editor.setTheme("ace/theme/monokai"); // Dark theme similar to Okaidia
         editor.setOptions({
-            fontSize: "14px",
+            fontSize: `${currentFontSize}px`,
             fontFamily: "'JetBrains Mono', monospace",
             showPrintMargin: false,
             enableBasicAutocompletion: true,
@@ -623,3 +631,52 @@ window.addEventListener('beforeunload', (e) => {
 // Initial Render
 renderRecentList();
 setLiveMode(true); // Enable Live Mode by default
+
+// --- Tools & Settings Dropdowns ---
+
+function toggleDropdown(dropdown) {
+    // Close all other dropdowns
+    document.querySelectorAll('.dropdown-content').forEach(el => {
+        if (el !== dropdown) el.classList.remove('show');
+    });
+    dropdown.classList.toggle('show');
+}
+
+els.btnTools.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleDropdown(els.dropdownTools);
+});
+
+els.btnSettings.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleDropdown(els.dropdownSettings);
+});
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.dropdown')) {
+        document.querySelectorAll('.dropdown-content').forEach(el => el.classList.remove('show'));
+    }
+});
+
+// Font Size Control
+function updateFontSize(change) {
+    currentFontSize += change;
+    if (currentFontSize < 8) currentFontSize = 8;
+    if (currentFontSize > 32) currentFontSize = 32;
+
+    els.fontSizeDisplay.textContent = `${currentFontSize}px`;
+    if (editor) {
+        editor.setOptions({ fontSize: `${currentFontSize}px` });
+    }
+}
+
+els.btnFontInc.addEventListener('click', (e) => {
+    e.stopPropagation();
+    updateFontSize(1);
+});
+
+els.btnFontDec.addEventListener('click', (e) => {
+    e.stopPropagation();
+    updateFontSize(-1);
+});

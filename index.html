@@ -39,10 +39,31 @@
       <span id="fileInfo"></span>
       <button id="btnLive" class="btn">Live: Off</button>
       <button id="btnSave" class="btn btn-primary" style="display: none;">Save</button>
-      <a href="diff/index.html" class="btn" style="text-decoration: none; display: inline-block;">Diff Viewer</a>
-      <a href="md/index.html" class="btn" style="text-decoration: none; display: inline-block;">Markdown Viewer</a>
-      <a href="comment/index.html" class="btn" style="text-decoration: none; display: inline-block;">Comment
-        Formatter</a>
+
+      <!-- Tools Dropdown -->
+      <div class="dropdown">
+        <button id="btnTools" class="btn btn-icon" title="Tools">🛠️</button>
+        <div id="dropdownTools" class="dropdown-content">
+          <a href="diff/index.html">Diff Viewer</a>
+          <a href="md/index.html">Markdown Viewer</a>
+          <a href="comment/index.html">Comment Formatter</a>
+        </div>
+      </div>
+
+      <!-- Settings Dropdown -->
+      <div class="dropdown">
+        <button id="btnSettings" class="btn btn-icon" title="Settings">⚙️</button>
+        <div id="dropdownSettings" class="dropdown-content">
+          <div class="setting-item">
+            <label>Font Size</label>
+            <div class="font-control">
+              <button id="btnFontDec" class="btn-small">−</button>
+              <span id="fontSizeDisplay">14px</span>
+              <button id="btnFontInc" class="btn-small">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div id="editorContainer">

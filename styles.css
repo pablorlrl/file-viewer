@@ -358,3 +358,112 @@ body.dragging #dragOverlay {
 .ace_constant.ace_numeric.ace_ip {
   color: #b5cea8 !important;
 }
+/* Dropdown Styles */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.btn-icon {
+  padding: 6px 10px;
+  font-size: 18px;
+  line-height: 1;
+  min-width: auto;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: var(--bg-header);
+  min-width: 180px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+}
+
+.dropdown-content.show {
+  display: block;
+}
+
+.dropdown-content a {
+  color: var(--fg-primary);
+  padding: 10px 16px;
+  text-decoration: none;
+  display: block;
+  font-size: 13px;
+  transition: background-color 0.2s;
+}
+
+.dropdown-content a:hover {
+  background-color: var(--hover-bg);
+}
+
+/* Settings Controls */
+.setting-item {
+  padding: 12px 16px;
+  color: var(--fg-primary);
+  font-size: 13px;
+}
+
+.setting-item label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--fg-secondary);
+  font-size: 11px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.font-control {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--bg-root);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 4px 8px;
+  gap: 8px;
+}
+
+.btn-small {
+  background-color: var(--bg-sidebar);
+  border: 1px solid var(--border);
+  color: var(--fg-primary);
+  padding: 2px 10px;
+  font-size: 14px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.btn-small:hover {
+  background-color: var(--hover-bg);
+}
+
+#fontSizeDisplay {
+  font-family: var(--font-code);
+  font-size: 12px;
+  min-width: 40px;
+  text-align: center;
+}
+
+/* Editor */
+#editorContainer {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+  background-color: var(--bg-root);
+}
+
+#editor {
+  flex: 1;
+  height: 100%;
+  width: 100%;
+}
