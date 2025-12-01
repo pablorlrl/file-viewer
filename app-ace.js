@@ -4,6 +4,8 @@ let currentFileHandle = null;
 let currentFileLastModified = 0;
 let liveMode = false;
 let liveInterval = null;
+let suppressChangeEvents = false; // Flag to suppress change events during programmatic updates
+let isLoadingFile = false; // Flag to prevent live updates while loading a file
 let allFiles = []; // Array of {name, handle}
 
 // Editor state
@@ -142,21 +144,27 @@ function createEditor(content, filename) {
     const mode = getAceMode(filename);
     editor.session.setMode(`ace/mode/${mode}`);
 
-    // Set content
-    editor.setValue(content, -1); // -1 moves cursor to start
+    // Set content and normalize originalFileContent
+    suppressChangeEvents = true;
+    try {
+        editor.setValue(content, -1); // -1 moves cursor to start
 
-    // Force editor to resize and recalculate positions (fixes cursor offset bug)
-    editor.resize();
-    editor.renderer.updateFull();
+        // Force editor to resize and recalculate positions
+        editor.resize();
+        editor.renderer.updateFull();
 
-    // Store original content
-    originalFileContent = content;
-    hasUnsavedChanges = false;
-    els.btnSave.style.display = 'none';
+        // Store original content AFTER setting value to ensure normalization (e.g. line endings) matches
+        originalFileContent = editor.getValue();
+        hasUnsavedChanges = false;
+        els.btnSave.style.display = 'none';
+    } finally {
+        suppressChangeEvents = false;
+    }
 }
 
 function checkForChanges() {
     if (!editor) return;
+    if (suppressChangeEvents) return; // Ignore changes triggered by programmatic updates
 
     const currentContent = editor.getValue();
     hasUnsavedChanges = currentContent !== originalFileContent;
@@ -250,14 +258,14 @@ async function loadFolder(dirHandle) {
     }
 }
 
-function renderFileTree(tree, parentElement = null, level = 0) {
+function renderFileTree(tree, parentElement = null) {
     const container = parentElement || els.fileList;
 
     if (!parentElement) {
         container.innerHTML = '';
     }
 
-    if (tree.length === 0 && level === 0) {
+    if (tree.length === 0 && !parentElement) {
         container.innerHTML = '<li class="empty-msg">No files found</li>';
         return;
     }
@@ -265,9 +273,17 @@ function renderFileTree(tree, parentElement = null, level = 0) {
     tree.forEach(item => {
         const li = document.createElement('li');
         li.className = item.type === 'directory' ? 'folder-item' : 'file-item';
-        li.style.paddingLeft = `${level * 16 + 8}px`;
+        // Remove manual padding, rely on CSS nesting
+        // li.style.paddingLeft = `${level * 16 + 8}px`; 
 
         if (item.type === 'directory') {
+            // Create container for folder content to handle click
+            const folderContent = document.createElement('div');
+            folderContent.className = 'folder-content';
+            folderContent.style.display = 'flex';
+            folderContent.style.alignItems = 'center';
+            folderContent.style.width = '100%';
+
             const icon = document.createElement('span');
             icon.className = 'folder-icon';
             icon.textContent = item.expanded ? '▼' : '▶';
@@ -276,45 +292,53 @@ function renderFileTree(tree, parentElement = null, level = 0) {
             folderName.className = 'folder-name';
             folderName.textContent = `📁 ${item.name}`;
 
-            li.appendChild(icon);
-            li.appendChild(folderName);
+            folderContent.appendChild(icon);
+            folderContent.appendChild(folderName);
+            li.appendChild(folderContent);
 
-            // Generate unique ID for this folder
-            const folderId = `folder-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-            li.dataset.folderId = folderId;
+            // Container for children
+            const childrenContainer = document.createElement('ul');
+            childrenContainer.className = 'tree-children';
+            if (item.expanded) {
+                childrenContainer.classList.add('expanded');
+            }
+            li.appendChild(childrenContainer);
 
-            li.onclick = (e) => {
+            // Render children if they exist
+            if (item.children && item.children.length > 0) {
+                renderFileTree(item.children, childrenContainer);
+            }
+
+            // Click handler on the folder content div, not the whole LI (to avoid bubbling issues with children)
+            folderContent.onclick = (e) => {
                 e.stopPropagation();
                 item.expanded = !item.expanded;
                 icon.textContent = item.expanded ? '▼' : '▶';
 
-                // Remove only children belonging to THIS folder
-                let nextSibling = li.nextSibling;
-                while (nextSibling && nextSibling.dataset && nextSibling.dataset.parentFolderId === folderId) {
-                    const toRemove = nextSibling;
-                    nextSibling = nextSibling.nextSibling;
-                    toRemove.remove();
-                }
-
-                if (item.expanded && item.children.length > 0) {
-                    const childrenContainer = document.createElement('ul');
-                    childrenContainer.className = 'tree-children';
-                    renderFileTree(item.children, childrenContainer, level + 1);
-
-                    // Mark children with parent folder ID and insert them
-                    const childElements = Array.from(childrenContainer.querySelectorAll('li'));
-                    childElements.reverse().forEach(child => {
-                        child.dataset.parentFolderId = folderId;
-                        li.parentNode.insertBefore(child, li.nextSibling);
-                    });
+                if (item.expanded) {
+                    childrenContainer.classList.add('expanded');
+                } else {
+                    childrenContainer.classList.remove('expanded');
                 }
             };
+
+            // Override the default li styles since we are nesting
+            li.style.display = 'block';
+            li.style.padding = '0'; // Reset padding for the LI container
+            folderContent.style.padding = '6px 12px'; // Apply padding to content
+            folderContent.style.cursor = 'pointer';
+            folderContent.onmouseover = () => folderContent.style.backgroundColor = 'var(--hover-bg)';
+            folderContent.onmouseout = () => folderContent.style.backgroundColor = '';
+
         } else {
             const fileName = document.createElement('span');
             fileName.textContent = `📄 ${item.name}`;
             li.appendChild(fileName);
 
-            li.onclick = () => openFile(item.handle, li);
+            li.onclick = (e) => {
+                e.stopPropagation();
+                openFile(item.handle, li);
+            };
         }
 
         container.appendChild(li);
@@ -343,22 +367,28 @@ async function openFile(fileHandle, liElement) {
         if (!confirmDiscard) return;
     }
 
-    // UI Update
-    document.querySelectorAll('.file-item').forEach(el => el.classList.remove('active'));
-    if (liElement) liElement.classList.add('active');
+    isLoadingFile = true;
 
-    currentFileHandle = fileHandle;
+    try {
+        // UI Update
+        document.querySelectorAll('.file-item').forEach(el => el.classList.remove('active'));
+        if (liElement) liElement.classList.add('active');
 
-    // Read File
-    const file = await fileHandle.getFile();
-    currentFileLastModified = file.lastModified;
-    const text = await file.text();
+        currentFileHandle = fileHandle;
 
-    // Update Info
-    els.fileInfo.textContent = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+        // Read File
+        const file = await fileHandle.getFile();
+        currentFileLastModified = file.lastModified;
+        const text = await file.text();
 
-    // Create editor with syntax highlighting
-    createEditor(text, file.name);
+        // Update Info
+        els.fileInfo.textContent = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+
+        // Create editor with syntax highlighting
+        createEditor(text, file.name);
+    } finally {
+        isLoadingFile = false;
+    }
 }
 
 // --- Save File ---
@@ -457,7 +487,11 @@ async function saveFile() {
 // --- Live Mode ---
 
 els.btnLive.addEventListener('click', () => {
-    liveMode = !liveMode;
+    setLiveMode(!liveMode);
+});
+
+function setLiveMode(enabled) {
+    liveMode = enabled;
     els.btnLive.textContent = `Live: ${liveMode ? 'On' : 'Off'}`;
     els.btnLive.classList.toggle('active', liveMode);
 
@@ -465,7 +499,7 @@ els.btnLive.addEventListener('click', () => {
 
     if (liveMode) {
         liveInterval = setInterval(async () => {
-            if (!currentFileHandle) return;
+            if (!currentFileHandle || isLoadingFile) return;
             try {
                 const file = await currentFileHandle.getFile();
                 if (file.lastModified > currentFileLastModified) {
@@ -474,9 +508,17 @@ els.btnLive.addEventListener('click', () => {
 
                     // Update editor content
                     if (editor) {
-                        editor.setValue(text, -1);
-                        originalFileContent = text;
-                        currentFileLastModified = file.lastModified;
+                        suppressChangeEvents = true;
+                        try {
+                            // Update editor
+                            editor.setValue(text, -1);
+
+                            // Update source of truth from editor to ensure normalization
+                            originalFileContent = editor.getValue();
+                            currentFileLastModified = file.lastModified;
+                        } finally {
+                            suppressChangeEvents = false;
+                        }
                     }
                 }
             } catch (e) {
@@ -484,7 +526,7 @@ els.btnLive.addEventListener('click', () => {
             }
         }, 1000);
     }
-});
+}
 
 // --- Search / Filter ---
 
@@ -580,3 +622,4 @@ window.addEventListener('beforeunload', (e) => {
 
 // Initial Render
 renderRecentList();
+setLiveMode(true); // Enable Live Mode by default

@@ -52,7 +52,8 @@ body {
   list-style: none;
   padding: 0;
   margin: 0;
-  overflow-y: auto;
+  overflow: auto;
+  /* Allow both vertical and horizontal scrolling */
   flex: 1;
 }
 
@@ -63,7 +64,7 @@ body {
 }
 
 .folder-item {
-  padding: 6px 12px;
+  /* padding: 6px 12px; handled by folder-content */
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -71,6 +72,7 @@ body {
   color: var(--fg-primary);
   user-select: none;
   transition: background-color 0.15s ease;
+  white-space: nowrap;
 }
 
 .folder-item:hover {
@@ -86,6 +88,11 @@ body {
   margin-right: 4px;
 }
 
+.folder-content {
+  white-space: nowrap;
+  min-width: max-content;
+}
+
 .file-item {
   padding: 6px 12px;
   cursor: pointer;
@@ -94,6 +101,8 @@ body {
   font-size: 13px;
   color: var(--fg-primary);
   transition: background-color 0.15s ease;
+  white-space: nowrap;
+  min-width: max-content;
 }
 
 .file-item:hover {
@@ -112,6 +121,19 @@ body {
   color: var(--fg-secondary);
   font-size: 12px;
   font-style: italic;
+}
+
+.tree-children {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  padding-left: 16px;
+  display: none;
+  /* Hidden by default, toggled by JS */
+}
+
+.tree-children.expanded {
+  display: block;
 }
 
 /* Main Area */
