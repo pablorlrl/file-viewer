@@ -257,6 +257,7 @@ async function loadFolder(dirHandle) {
 
     try {
         const tree = await scanDirectory(dirHandle);
+        fileTree = tree; // Store for filter reset
         renderFileTree(tree);
         await saveHandle(dirHandle);
         renderRecentList();
@@ -538,10 +539,18 @@ function setLiveMode(enabled) {
 
 // --- Search / Filter ---
 
+let fileTree = []; // Store the original tree structure
+
 els.searchBar.addEventListener('input', (e) => {
     const term = e.target.value.toLowerCase();
-    const filtered = allFiles.filter(f => f.name.toLowerCase().includes(term));
-    renderFileList(filtered);
+    if (term === '') {
+        // Restore original tree view when filter is cleared
+        renderFileTree(fileTree);
+    } else {
+        // Filter files
+        const filtered = allFiles.filter(f => f.name.toLowerCase().includes(term));
+        renderFileList(filtered);
+    }
 });
 
 // --- Recent Folders ---
@@ -666,8 +675,15 @@ function updateFontSize(change) {
     if (currentFontSize > 32) currentFontSize = 32;
 
     els.fontSizeDisplay.textContent = `${currentFontSize}px`;
+    console.log('Updating font size to:', currentFontSize, 'Editor exists:', !!editor);
     if (editor) {
-        editor.setOptions({ fontSize: `${currentFontSize}px` });
+        // Update using setOptions which is the recommended way
+        editor.setOptions({
+            fontSize: currentFontSize + 'px'
+        });
+        // Force a refresh to apply changes
+        editor.resize();
+        editor.renderer.updateFull();
     }
 }
 
