@@ -577,3 +577,16 @@ body.dragging #dragOverlay {
   height: 100%;
   width: 100%;
 }
+
+/* Resizer */
+#resizer {
+  width: 5px;
+  background-color: var(--border);
+  cursor: col-resize;
+  flex-shrink: 0;
+  transition: background-color 0.2s;
+}
+
+#resizer:hover {
+  background-color: var(--accent);
+}
