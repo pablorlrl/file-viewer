@@ -1,10 +1,36 @@
 {
-  "name": "Test JSON",
-  "version": 1.0,
-  "features": [
-    "Syntax Highlighting",
-    "Live Mode",
-    "Dark Theme"
+  "name": "File Viewer",
+  "version": 2.0,
+  "features": {
+    "syntaxHighlighting": true,
+    "liveMode": false,
+    "darkTheme": true,
+    "legacySupport": false
+  },
+  "settings": {
+    "autoSave": true,
+    "notifications": false,
+    "debugMode": null,
+    "cacheEnabled": true,
+    "experimental": false
+  },
+  "users": [
+    {
+      "name": "Alice",
+      "active": true,
+      "admin": false,
+      "verified": true
+    },
+    {
+      "name": "Bob",
+      "active": false,
+      "admin": true,
+      "verified": null
+    }
   ],
-  "active": true
+  "logging": {
+    "enabled": true,
+    "fileOutput": false,
+    "consoleOutput": true
+  }
 }

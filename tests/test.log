@@ -1,0 +1,59 @@
+[2024-12-02 20:00:00.123 INF] Application started successfully
+[2024-12-02 20:00:01.456 DBG] Loading configuration from config.yaml
+[2024-12-02 20:00:02.789 VRB] Initializing database connection pool
+[2024-12-02 20:00:03.012 INFO] Connected to database: production_db
+[2024-12-02 20:00:04.345 WRN] Cache size approaching limit (85% full)
+[2024-12-02 20:00:05.678 WARN] Retrying failed connection attempt (1/3)
+[2024-12-02 20:00:06.901 WARNING] API rate limit threshold reached
+[2024-12-02 20:00:07.234 ERR] Failed to load plugin: missing dependency
+[2024-12-02 20:00:08.567 ERROR] Connection timeout after 30 seconds
+[2024-12-02 20:00:09.890 Error] Invalid configuration parameter: max_threads
+[2024-12-02 20:00:10.123 FTL] Database connection lost - cannot continue
+[2024-12-02 20:00:11.456 FATAL] Out of memory - terminating application
+[2024-12-02 20:00:12.789 CRITICAL] Security breach detected - shutting down
+
+Testing case variations:
+- fatal error detected in module A
+- FATAL system crash imminent
+- Fatal exception in thread pool
+- critical resource exhausted
+- CRITICAL temperature threshold exceeded
+- Critical path blocked
+
+Boolean values test:
+- Authentication enabled: true
+- Debug mode: false
+- Cache active: True
+- Logging disabled: False
+- Auto-restart: TRUE
+- Maintenance mode: FALSE
+- Database connection: null
+- API key: Null
+- Session token: NULL
+
+Success indicators:
+- Operation completed successfully
+- Request succeeded with status 200
+- All tests passed
+- Deployment OK
+- Transaction complete
+
+Error indicators:
+- Operation failed with error code 500
+- Request aborted due to timeout
+- Test failure in module X
+- Exception thrown in handler
+- Process aborted unexpectedly
+
+Network information:
+- Server IP: 192.168.1.100
+- Client IP: 10.0.0.50
+- Gateway: 172.16.0.1
+- API endpoint: https://api.example.com/v1/users
+- Documentation: https://docs.example.com
+
+Structured logging:
+[2024-12-02 20:01:00.000 INF] User {UserId} logged in from {IpAddress}
+[2024-12-02 20:01:01.111 DBG] Processing request {RequestId} with timeout {Timeout}ms
+[2024-12-02 20:01:02.222 WRN] Slow query detected: {QueryTime}ms for {Query}
+[2024-12-02 20:01:03.333 ERR] Failed to process {ItemCount} items: {ErrorMessage}

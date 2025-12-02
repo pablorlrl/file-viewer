@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- XML Configuration Test File -->
+<!-- Testing boolean highlighting: true, True, TRUE, false, False, FALSE -->
+
+<configuration>
+  <application>
+    <name>File Viewer</name>
+    <version>2.0</version>
+  </application>
+  
+  <features>
+    <syntaxHighlighting>true</syntaxHighlighting>
+    <liveMode>True</liveMode>
+    <darkTheme>TRUE</darkTheme>
+    <legacySupport>false</legacySupport>
+    <betaFeatures>False</betaFeatures>
+    <deprecatedApi>FALSE</deprecatedApi>
+  </features>
+  
+  <settings>
+    <autoSave enabled="true"/>
+    <notifications enabled="false"/>
+    <debugMode value="null"/>
+    <cacheEnabled value="Null"/>
+    <experimental value="NULL"/>
+  </settings>
+  
+  <users>
+    <user>
+      <name>Alice</name>
+      <active>true</active>
+      <admin>false</admin>
+      <verified>True</verified>
+    </user>
+    <user>
+      <name>Bob</name>
+      <active>FALSE</active>
+      <admin>true</admin>
+      <verified>null</verified>
+    </user>
+  </users>
+  
+  <logging>
+    <level>INFO</level>
+    <enabled>true</enabled>
+    <fileOutput>false</fileOutput>
+    <consoleOutput>TRUE</consoleOutput>
+  </logging>
+</configuration>

@@ -1,0 +1,37 @@
+# YAML Configuration Test File
+# Testing boolean highlighting: true, True, TRUE, false, False, FALSE
+
+application:
+  name: "File Viewer"
+  version: 2.0
+  
+features:
+  syntax_highlighting: true
+  live_mode: True
+  dark_theme: TRUE
+  legacy_support: false
+  beta_features: False
+  deprecated_api: FALSE
+  
+settings:
+  auto_save: true
+  notifications: false
+  debug_mode: null
+  cache_enabled: Null
+  experimental: NULL
+  
+users:
+  - name: "Alice"
+    active: true
+    admin: false
+    verified: True
+  - name: "Bob"
+    active: FALSE
+    admin: true
+    verified: null
+    
+logging:
+  level: INFO
+  enabled: true
+  file_output: false
+  console_output: TRUE

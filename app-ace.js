@@ -120,6 +120,7 @@ function getAceMode(filename) {
         'bash': 'sh',
         'sql': 'sql',
         'txt': 'text',
+        'ini': 'ini',
         'log': 'log'  // Use custom log mode
     };
 

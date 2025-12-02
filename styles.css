@@ -607,3 +607,27 @@ body.dragging #dragOverlay {
 #resizer:hover {
   background-color: var(--accent);
 }
+/* Boolean and null value highlighting - applies to ALL file formats */
+.ace_boolean.ace_true {
+  color: #4caf50 !important;
+  font-weight: 600 !important;
+}
+
+.ace_boolean.ace_false {
+  color: #ff9800 !important;
+  font-weight: 600 !important;
+}
+
+.ace_null {
+  color: #858585 !important;
+  font-weight: 500 !important;
+  font-style: italic !important;
+}
+
+/* Fix for JSON keys appearing green */
+.ace_string { color: #ce9178 !important; }
+.ace_variable { color: #9cdcfe !important; }
+
+/* Tree View Styles */
+.tree-children { display: none; list-style: none; padding-left: 16px; margin: 0; }
+.tree-children.expanded { display: block; }
