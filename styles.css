@@ -226,7 +226,7 @@ body {
 /* Ace Editor overrides */
 .ace_editor {
   font-family: var(--font-code) !important;
-  
+
 }
 
 .ace_gutter {
@@ -358,6 +358,23 @@ body.dragging #dragOverlay {
 .ace_constant.ace_numeric.ace_ip {
   color: #b5cea8 !important;
 }
+
+.ace_constant.ace_language.ace_boolean.ace_true {
+  color: #4caf50 !important;
+  font-weight: 600 !important;
+}
+
+.ace_constant.ace_language.ace_boolean.ace_false {
+  color: #ff9800 !important;
+  font-weight: 600 !important;
+}
+
+.ace_constant.ace_language.ace_null {
+  color: #858585 !important;
+  font-weight: 500 !important;
+  font-style: italic !important;
+}
+
 /* Dropdown Styles */
 .dropdown {
   position: relative;

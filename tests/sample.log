@@ -14,3 +14,5 @@ System.InvalidOperationException: The operation is not valid
 [12:45:30.234 WARNING] High memory usage detected: {MemoryUsageMB}MB
 [12:45:31.567 ERROR] Connection timeout to https://api.example.com/endpoint
 [12:45:32.890 VERBOSE] Detailed trace information for debugging
+[12:45:27.123 FTL] Critical system failure Fail fail critical Critical CRITICAL Fatal fatal FATAL FALSE False false true True TRUE in {SystemComponent}
+[12:45:30.234 WARNING] High memory usage detected Warning warning WARNING: {MemoryUsageMB}MB

@@ -11,32 +11,32 @@ ace.define('ace/mode/log_highlight_rules', ['require', 'exports', 'module', 'ace
                 // Fatal level - bright red/magenta (matches FTL, FATAL, etc. anywhere)
                 {
                     token: "constant.language.fatal",
-                    regex: "\\b(?:FTL|FATAL|Fatal|CRITICAL|Critical)\\b"
+                    regex: "\\b(?:FTL|FATAL|Fatal|fatal|CRITICAL|Critical|critical)\\b"
                 },
                 // Error level - red
                 {
                     token: "constant.language.error",
-                    regex: "\\b(?:ERR|ERROR|Error)\\b"
+                    regex: "\\b(?:ERR|ERROR|Error|error)\\b"
                 },
                 // Warning level - yellow/orange
                 {
                     token: "constant.language.warning",
-                    regex: "\\b(?:WRN|WARN|WARNING|Warning|Warn)\\b"
+                    regex: "\\b(?:WRN|WARN|WARNING|Warning|Warn|warning|warn)\\b"
                 },
                 // Info level - bright blue
                 {
                     token: "constant.language.info",
-                    regex: "\\b(?:INF|INFO|Information|Info)\\b"
+                    regex: "\\b(?:INF|INFO|Information|Info|info)\\b"
                 },
                 // Debug level - cyan
                 {
                     token: "constant.language.debug",
-                    regex: "\\b(?:DBG|DEBUG|Debug)\\b"
+                    regex: "\\b(?:DBG|DEBUG|Debug|debug)\\b"
                 },
                 // Verbose level - gray/muted
                 {
                     token: "constant.language.verbose",
-                    regex: "\\b(?:VRB|VERBOSE|Verbose)\\b"
+                    regex: "\\b(?:VRB|VERBOSE|Verbose|verbose)\\b"
                 },
                 // Timestamp with log level inside brackets [HH:MM:SS.fff LVL]
                 {
@@ -72,6 +72,21 @@ ace.define('ace/mode/log_highlight_rules', ['require', 'exports', 'module', 'ace
                 {
                     token: "constant.language.success",
                     regex: "\\b(?:[Ss]uccess|[Ss]uccessful|[Ss]ucceeded|[Oo][Kk]|[Pp]ass|[Pp]assed|[Cc]omplete|[Cc]ompleted)\\b"
+                },
+                // Boolean - true (green/success)
+                {
+                    token: "constant.language.boolean.true",
+                    regex: "\\b(?:true|True|TRUE)\\b"
+                },
+                // Boolean - false (red-orange/warning)
+                {
+                    token: "constant.language.boolean.false",
+                    regex: "\\b(?:false|False|FALSE)\\b"
+                },
+                // Null values
+                {
+                    token: "constant.language.null",
+                    regex: "\\b(?:null|Null|NULL)\\b"
                 },
                 // Regular timestamp (without log level or different format)
                 {
