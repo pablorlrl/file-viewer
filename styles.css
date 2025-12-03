@@ -631,3 +631,51 @@ body.dragging #dragOverlay {
 /* Tree View Styles */
 .tree-children { display: none; list-style: none; padding-left: 16px; margin: 0; }
 .tree-children.expanded { display: block; }
+
+/* Context Menu */
+.context-menu {
+  position: fixed;
+  background: var(--bg-header);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  z-index: 10000;
+  display: none;
+  min-width: 150px;
+}
+
+.context-menu-item {
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--fg-primary);
+  transition: background-color 0.2s;
+}
+
+.context-menu-item:hover {
+  background: var(--hover-bg);
+}
+
+.context-menu-item:first-child {
+  border-radius: 4px 4px 0 0;
+}
+
+.context-menu-item:last-child {
+  border-radius: 0 0 4px 4px;
+}
+
+/* Context Menu Separator */
+.context-menu-separator {
+  height: 1px;
+  background: var(--border);
+  margin: 4px 0;
+}
+
+/* Danger menu item (delete) */
+.context-menu-item-danger {
+  color: #f48771 !important;
+}
+
+.context-menu-item-danger:hover {
+  background: rgba(244, 135, 113, 0.1) !important;
+}

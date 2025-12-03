@@ -306,6 +306,9 @@ function renderFileTree(tree, parentElement = null) {
             folderContent.appendChild(folderName);
             li.appendChild(folderContent);
 
+            // Store directory handle for context menu
+            li._dirHandle = item.handle;
+
             // Container for children
             const childrenContainer = document.createElement('ul');
             childrenContainer.className = 'tree-children';
@@ -344,6 +347,9 @@ function renderFileTree(tree, parentElement = null) {
             const fileName = document.createElement('span');
             fileName.textContent = `📄 ${item.name}`;
             li.appendChild(fileName);
+
+            // Store file handle for context menu
+            li._fileHandle = item.handle;
 
             li.onclick = (e) => {
                 e.stopPropagation();
@@ -712,7 +718,7 @@ resizer.addEventListener('mousedown', (e) => {
 
 document.addEventListener('mousemove', (e) => {
     if (!isResizing) return;
-    
+
     const newWidth = e.clientX;
     if (newWidth > 150 && newWidth < 600) {
         sidebar.style.width = newWidth + 'px';
@@ -724,5 +730,226 @@ document.addEventListener('mouseup', () => {
         isResizing = false;
         document.body.style.cursor = '';
         document.body.style.userSelect = '';
+    }
+});
+
+// --- Context Menu ---
+const contextMenu = document.getElementById('contextMenu');
+let contextMenuTarget = null;
+let contextMenuClickedItem = null;
+let contextMenuClickedIsDir = false;
+let contextMenuDeletionParent = null;
+
+// Show context menu
+function showContextMenu(x, y, targetDirHandle, clickedItem = null, isDir = false, deletionParent = null) {
+    contextMenuTarget = targetDirHandle;
+    contextMenuClickedItem = clickedItem;
+    contextMenuClickedIsDir = isDir;
+    contextMenuDeletionParent = deletionParent;
+    contextMenu.style.left = x + 'px';
+    contextMenu.style.top = y + 'px';
+    contextMenu.style.display = 'block';
+}
+
+// Hide context menu
+function hideContextMenu() {
+    contextMenu.style.display = 'none';
+    contextMenuTarget = null;
+    contextMenuClickedItem = null;
+    contextMenuClickedIsDir = false;
+    contextMenuDeletionParent = null;
+}
+
+// Create new file
+async function createNewFile(parentDirHandle) {
+    console.log('[CREATE FILE] Called with parentDirHandle:', parentDirHandle);
+    const fileName = prompt('Enter file name:');
+    console.log('[CREATE FILE] User entered:', fileName);
+    if (!fileName) return;
+
+    if (!/^[^<>:"/\\|?*]+$/.test(fileName)) {
+        alert('Invalid file name. Please avoid special characters: < > : " / \\ | ? *');
+        return;
+    }
+
+    try {
+        const fileHandle = await parentDirHandle.getFileHandle(fileName, { create: true });
+        const writable = await fileHandle.createWritable();
+        await writable.write('');
+        await writable.close();
+        await loadFolder(currentDirHandle);
+        els.fileInfo.textContent = `File "${fileName}" created successfully`;
+        setTimeout(() => { els.fileInfo.textContent = ''; }, 3000);
+    } catch (err) {
+        if (err.name === 'InvalidModificationError') {
+            alert('File already exists!');
+        } else {
+            alert(`Error creating file: ${err.message}`);
+        }
+    }
+}
+
+// Create new folder
+async function createNewFolder(parentDirHandle) {
+    const folderName = prompt('Enter folder name:');
+    if (!folderName) return;
+
+    if (!/^[^<>:"/\\|?*]+$/.test(folderName)) {
+        alert('Invalid folder name. Please avoid special characters: < > : " / \\ | ? *');
+        return;
+    }
+
+    try {
+        await parentDirHandle.getDirectoryHandle(folderName, { create: true });
+        await loadFolder(currentDirHandle);
+        els.fileInfo.textContent = `Folder "${folderName}" created successfully`;
+        setTimeout(() => { els.fileInfo.textContent = ''; }, 3000);
+    } catch (err) {
+        if (err.name === 'InvalidModificationError') {
+            alert('Folder already exists!');
+        } else {
+            alert(`Error creating folder: ${err.message}`);
+        }
+    }
+}
+
+// Delete file or folder
+async function deleteItem(itemHandle, isDirectory, parentDirHandle) {
+    const itemType = isDirectory ? 'folder' : 'file';
+    const itemName = itemHandle.name;
+
+    if (!confirm(`Are you sure you want to delete this ${itemType} "${itemName}"?`)) {
+        return;
+    }
+
+    try {
+        // Use the parent directory handle to remove the item
+        await parentDirHandle.removeEntry(itemName, { recursive: isDirectory });
+        await loadFolder(currentDirHandle);
+        els.fileInfo.textContent = `Deleted "${itemName}" successfully`;
+        setTimeout(() => { els.fileInfo.textContent = ''; }, 3000);
+    } catch (err) {
+        alert(`Error deleting ${itemType}: ${err.message}`);
+    }
+}
+
+// Right-click event on file list
+els.fileList.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+
+    if (!currentDirHandle) {
+        alert('Please open a folder first');
+        return;
+    }
+
+    let target = e.target;
+    let folderItem = null;
+    let fileItem = null;
+    let targetHandle = currentDirHandle;
+    let clickedItem = null;
+    let isDir = false;
+
+    // Traverse up to find what was clicked and its parent
+    let currentNode = target;
+    while (currentNode && currentNode !== els.fileList) {
+        // Check if we hit a file item
+        if (!clickedItem && currentNode.classList && currentNode.classList.contains('file-item')) {
+            fileItem = currentNode;
+            clickedItem = currentNode._fileHandle;
+            isDir = false;
+        }
+
+        // Check if we hit a folder item
+        if (currentNode.classList && currentNode.classList.contains('folder-item')) {
+            // If we haven't found a clicked item yet, then this folder IS the clicked item
+            if (!clickedItem) {
+                folderItem = currentNode;
+                clickedItem = currentNode._dirHandle;
+                isDir = true;
+                // For a folder, the "parent" for creation is the folder itself
+                targetHandle = currentNode._dirHandle;
+            } else {
+                // If we already found a clicked item (e.g. a file), then this folder is the PARENT
+                // This is where the file lives, so we should delete from here / create here
+                targetHandle = currentNode._dirHandle;
+            }
+            break; // Found the parent context, stop
+        }
+
+        currentNode = currentNode.parentElement;
+    }
+
+    // If we clicked a folder, we need its PARENT to delete it
+    // But we set targetHandle to the folder itself (for creation)
+    // So for deletion of a folder, we actually need to look one level higher...
+    // This is tricky. Let's handle it by storing a separate "deletionParentHandle"
+
+    let deletionParentHandle = targetHandle;
+
+    // Special case: If we clicked a folder, targetHandle is that folder.
+    // But to delete it, we need its parent.
+    // We can try to find the parent folder by continuing traversal?
+    if (isDir && folderItem) {
+        let parentNode = folderItem.parentElement; // ul.tree-children
+        if (parentNode && parentNode.parentElement && parentNode.parentElement.classList.contains('folder-item')) {
+            deletionParentHandle = parentNode.parentElement._dirHandle;
+        } else {
+            // Top level folder
+            deletionParentHandle = currentDirHandle;
+        }
+    } else if (!isDir && clickedItem) {
+        // If it's a file, targetHandle IS the parent folder (found above), so it's correct for deletion
+        deletionParentHandle = targetHandle;
+    }
+
+    console.log('[RIGHT CLICK] targetHandle (create):', targetHandle, 'deletionParentHandle:', deletionParentHandle, 'clickedItem:', clickedItem);
+
+    // Pass both handles to showContextMenu
+    // We'll store deletionParentHandle in a new variable or property
+    showContextMenu(e.pageX, e.pageY, targetHandle, clickedItem, isDir, deletionParentHandle);
+});
+
+// Context menu item clicks
+contextMenu.addEventListener('click', async (e) => {
+    let target = e.target;
+    while (target && target !== contextMenu) {
+        if (target.classList && target.classList.contains('context-menu-item')) {
+            break;
+        }
+        target = target.parentElement;
+    }
+
+    const action = target?.dataset?.action;
+    const savedTarget = contextMenuTarget;
+    const savedClickedItem = contextMenuClickedItem;
+    const savedIsDir = contextMenuClickedIsDir;
+    const savedDeletionParent = contextMenuDeletionParent;
+    hideContextMenu();
+
+    if (!savedTarget) return;
+
+    if (action === 'newFile') {
+        await createNewFile(savedTarget);
+    } else if (action === 'newFolder') {
+        await createNewFolder(savedTarget);
+    } else if (action === 'delete' && savedClickedItem) {
+        // Use the specific parent for deletion if available, otherwise fallback to savedTarget (which might be wrong for folders)
+        // Actually, savedDeletionParent should always be correct now.
+        const parentToUse = savedDeletionParent || savedTarget;
+        await deleteItem(savedClickedItem, savedIsDir, parentToUse);
+    }
+});
+
+// Hide context menu on outside click
+document.addEventListener('click', (e) => {
+    if (!contextMenu.contains(e.target)) {
+        hideContextMenu();
+    }
+});
+
+// Hide context menu on ESC
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        hideContextMenu();
     }
 });

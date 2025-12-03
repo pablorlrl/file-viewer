@@ -34,16 +34,10 @@
                         const type = token.type;
                         const value = token.value.trim().toLowerCase();
 
-                        // AGGRESSIVE DEBUG: Log ALL tokens in INI mode
-                        if (modeId.indexOf('ini') !== -1 && token.value.trim()) {
-                            console.log(`[INI TOKEN] Raw: '${token.value}', Lower: '${value}', Type: '${type}'`);
-                        }
-
                         // Skip empty values
                         if (!value) continue;
 
                         // GLOBAL EXCLUSIONS: Never highlight strings or comments
-                        // This fixes the JSON "normal text green" issue
                         if (type.indexOf('string') !== -1 || type.indexOf('comment') !== -1) {
                             continue;
                         }
@@ -51,36 +45,27 @@
                         // Check for boolean/null values
                         if (value === 'true' || value === 'false' || value === 'null' || value === 'none' || value === 'nil') {
 
-                            // DEBUGGING: Log token details for troubleshooting
-                            if (modeId.indexOf('json') !== -1 || modeId.indexOf('ini') !== -1) {
-                                console.log(`[DEBUG] Value: '${value}', Type: '${type}', Mode: '${modeId}'`);
-                            }
-
                             let shouldHighlight = false;
 
                             // MODE-SPECIFIC LOGIC
                             if (modeId.indexOf('json') !== -1) {
                                 // JSON: STRICT - only highlight if it's already a constant.language
-                                // Note: We already excluded strings above, so this is double safety
                                 if (type.indexOf('constant.language') !== -1) {
                                     shouldHighlight = true;
                                 }
                             }
                             else if (modeId.indexOf('xml') !== -1 || modeId.indexOf('html') !== -1) {
                                 // XML/HTML: LOOSE - highlight text content
-                                // XML content is often just 'text'
                                 if (type.indexOf('text') !== -1 || type.indexOf('constant') !== -1) {
                                     shouldHighlight = true;
                                 }
                             }
                             else if (modeId.indexOf('ini') !== -1 || modeId.indexOf('yaml') !== -1) {
                                 // INI/YAML: MEDIUM - highlight text, constants, and identifiers
-                                // We already excluded strings/comments globally
                                 shouldHighlight = true;
                             }
                             else {
                                 // DEFAULT / FALLBACK (Log files, etc.)
-                                // Avoid keywords and variables (keys)
                                 const isKeyword = type.indexOf('keyword') !== -1;
                                 const isVariable = type.indexOf('variable') !== -1;
 
@@ -106,7 +91,7 @@
                 return result;
             };
 
-            console.log('Boolean semantic coloring enabled with strict global exclusions');
+            console.log('Boolean semantic coloring enabled');
         } catch (e) {
             console.error('Failed to initialize boolean theme:', e);
         }
