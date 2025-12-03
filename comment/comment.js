@@ -16,7 +16,6 @@ const customPrefix = document.getElementById('customPrefix');
 const customSuffix = document.getElementById('customSuffix');
 const upperCase = document.getElementById('upperCase');
 
-const btnFormat = document.getElementById('btnFormat');
 const btnCopy = document.getElementById('btnCopy');
 
 // Comment style presets
@@ -189,7 +188,6 @@ commentInput.addEventListener('keydown', handleTab);
 commentOutput.addEventListener('scroll', () => syncScroll(commentOutput, outputLineNumbers));
 
 styleSelect.addEventListener('change', handleStyleChange);
-btnFormat.addEventListener('click', formatComments);
 btnCopy.addEventListener('click', copyOutput);
 
 // Auto-format on control changes

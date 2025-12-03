@@ -678,6 +678,26 @@ document.addEventListener('click', (e) => {
 });
 
 // Font Size Control
+// Font Size Control
+
+// Load from localStorage
+try {
+    const savedSettings = localStorage.getItem('file-viewer');
+    if (savedSettings) {
+        const parsed = JSON.parse(savedSettings);
+        if (parsed['font-size']) {
+            currentFontSize = parseInt(parsed['font-size'], 10);
+        }
+    }
+} catch (e) {
+    console.error('Failed to load settings:', e);
+}
+
+// Apply initial font size to display
+if (els.fontSizeDisplay) {
+    els.fontSizeDisplay.textContent = `${currentFontSize}px`;
+}
+
 function updateFontSize(change) {
     currentFontSize += change;
     if (currentFontSize < 8) currentFontSize = 8;
@@ -685,6 +705,15 @@ function updateFontSize(change) {
 
     els.fontSizeDisplay.textContent = `${currentFontSize}px`;
     console.log('Updating font size to:', currentFontSize, 'Editor exists:', !!editor);
+
+    // Save to localStorage
+    try {
+        const settings = { 'font-size': currentFontSize };
+        localStorage.setItem('file-viewer', JSON.stringify(settings));
+    } catch (e) {
+        console.error('Failed to save settings:', e);
+    }
+
     if (editor) {
         // Update using setOptions which is the recommended way
         editor.setOptions({

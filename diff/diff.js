@@ -2,7 +2,6 @@
 let viewMode = 'split'; // 'unified' or 'split'
 
 // DOM Elements
-const btnCompare = document.getElementById('btnCompare');
 const btnViewMode = document.getElementById('btnViewMode');
 const inputOriginal = document.getElementById('inputOriginal');
 const inputModified = document.getElementById('inputModified');
@@ -72,9 +71,6 @@ function compareFiles() {
         renderSplitView(original, modified, diff);
     }
 }
-
-// Compare button handler
-btnCompare.addEventListener('click', compareFiles);
 
 function showEmptyState() {
     unifiedView.innerHTML = '<div class="empty-state">Please enter text to compare.</div>';
