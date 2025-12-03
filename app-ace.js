@@ -528,8 +528,39 @@ function setLiveMode(enabled) {
                     if (editor) {
                         suppressChangeEvents = true;
                         try {
+                            // Check if user was viewing the end of the document before reload
+                            const session = editor.getSession();
+                            const lastRow = session.getLength() - 1;
+
+                            // Get the first and last visible rows in the viewport
+                            const firstVisibleRow = editor.getFirstVisibleRow();
+                            const lastVisibleRow = editor.getLastVisibleRow();
+
+                            // Consider "at end" if the last 3 lines of the document are visible
+                            const wasAtEnd = lastVisibleRow >= (lastRow - 2);
+
+                            // Save current scroll position and cursor if not at end
+                            const savedScrollTop = wasAtEnd ? null : editor.renderer.getScrollTop();
+                            const savedCursorPos = wasAtEnd ? null : editor.getCursorPosition();
+
                             // Update editor
                             editor.setValue(text, -1);
+
+                            // Restore position based on whether user was viewing the end
+                            if (wasAtEnd) {
+                                // User was viewing the end, so scroll to the new end
+                                const newLastRow = editor.getSession().getLength() - 1;
+                                editor.gotoLine(newLastRow + 1, 0, false);
+                                editor.scrollToLine(newLastRow, true, true, () => { });
+                            } else {
+                                // User was viewing another part, restore their position
+                                if (savedCursorPos) {
+                                    editor.moveCursorToPosition(savedCursorPos);
+                                }
+                                if (savedScrollTop !== null) {
+                                    editor.renderer.scrollToY(savedScrollTop);
+                                }
+                            }
 
                             // Update source of truth from editor to ensure normalization
                             originalFileContent = editor.getValue();
