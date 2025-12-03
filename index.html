@@ -13,6 +13,7 @@
     rel="stylesheet">
   <!-- Custom Styles -->
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="modal.css">
 </head>
 
 <body>
@@ -79,14 +80,40 @@
   <!-- Context Menu -->
   <div id="contextMenu" class="context-menu">
     <div class="context-menu-item" data-action="newFile">
-       New File
+      New File
     </div>
     <div class="context-menu-item" data-action="newFolder">
-       New Folder
+      New Folder
+    </div>
+    <div class="context-menu-separator"></div>
+    <div class="context-menu-item" data-action="rename">
+      Rename
+    </div>
+    <div class="context-menu-item" data-action="duplicate">
+      Duplicate
+    </div>
+    <div class="context-menu-item" data-action="copyPath">
+      Copy Path
+    </div>
+    <div class="context-menu-separator"></div>
+    <div class="context-menu-item" data-action="properties">
+      Properties
     </div>
     <div class="context-menu-separator"></div>
     <div class="context-menu-item context-menu-item-danger" data-action="delete">
-       Delete
+      Delete
+    </div>
+  </div>
+
+  <!-- Properties Modal -->
+  <div id="propertiesModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <h2>Properties</h2>
+      <div id="propertiesContent"></div>
+      <div class="modal-footer">
+        <button id="btnCloseProperties" class="btn btn-primary">Close</button>
+      </div>
     </div>
   </div>
 

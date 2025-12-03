@@ -308,6 +308,7 @@ function renderFileTree(tree, parentElement = null) {
 
             // Store directory handle for context menu
             li._dirHandle = item.handle;
+            li.dataset.path = item.path;
 
             // Container for children
             const childrenContainer = document.createElement('ul');
@@ -350,6 +351,7 @@ function renderFileTree(tree, parentElement = null) {
 
             // Store file handle for context menu
             li._fileHandle = item.handle;
+            li.dataset.path = item.path;
 
             li.onclick = (e) => {
                 e.stopPropagation();
@@ -739,13 +741,15 @@ let contextMenuTarget = null;
 let contextMenuClickedItem = null;
 let contextMenuClickedIsDir = false;
 let contextMenuDeletionParent = null;
+let contextMenuClickedPath = null;
 
 // Show context menu
-function showContextMenu(x, y, targetDirHandle, clickedItem = null, isDir = false, deletionParent = null) {
+function showContextMenu(x, y, targetDirHandle, clickedItem = null, isDir = false, deletionParent = null, clickedPath = null) {
     contextMenuTarget = targetDirHandle;
     contextMenuClickedItem = clickedItem;
     contextMenuClickedIsDir = isDir;
     contextMenuDeletionParent = deletionParent;
+    contextMenuClickedPath = clickedPath;
     contextMenu.style.left = x + 'px';
     contextMenu.style.top = y + 'px';
     contextMenu.style.display = 'block';
@@ -758,6 +762,7 @@ function hideContextMenu() {
     contextMenuClickedItem = null;
     contextMenuClickedIsDir = false;
     contextMenuDeletionParent = null;
+    contextMenuClickedPath = null;
 }
 
 // Create new file
@@ -813,6 +818,161 @@ async function createNewFolder(parentDirHandle) {
     }
 }
 
+
+// Rename file or folder
+async function renameItem(itemHandle) {
+    const oldName = itemHandle.name;
+    const newName = prompt(`Rename "${oldName}" to:`, oldName);
+
+    if (!newName || newName === oldName) return;
+
+    if (!/^[^<>:"/\\|?*]+$/.test(newName)) {
+        alert('Invalid name. Please avoid special characters: < > : " / \\ | ? *');
+        return;
+    }
+
+    try {
+        // Check if move() is supported (File System Access API)
+        if (itemHandle.move) {
+            await itemHandle.move(newName);
+            await loadFolder(currentDirHandle);
+            els.fileInfo.textContent = `Renamed to "${newName}"`;
+            setTimeout(() => { els.fileInfo.textContent = ''; }, 3000);
+        } else {
+            alert('Rename is not supported by your browser for this file system handle.');
+        }
+    } catch (err) {
+        alert(`Error renaming: ${err.message}`);
+    }
+}
+
+// Duplicate file
+async function duplicateItem(itemHandle, isDirectory, parentDirHandle) {
+    if (isDirectory) {
+        alert('Folder duplication is not supported yet.');
+        return;
+    }
+
+    const oldName = itemHandle.name;
+    const parts = oldName.split('.');
+    let newName;
+    if (parts.length > 1) {
+        const ext = parts.pop();
+        newName = `${parts.join('.')}_copy.${ext}`;
+    } else {
+        newName = `${oldName}_copy`;
+    }
+
+    const userBuffer = prompt('Enter name for duplicate:', newName);
+    if (!userBuffer) return;
+    newName = userBuffer;
+
+    try {
+        // 1. Read original content
+        const file = await itemHandle.getFile();
+        const content = await file.text();
+
+        // 2. Create new file
+        const newFileHandle = await parentDirHandle.getFileHandle(newName, { create: true });
+
+        // 3. Write content
+        const writable = await newFileHandle.createWritable();
+        await writable.write(content);
+        await writable.close();
+
+        await loadFolder(currentDirHandle);
+        els.fileInfo.textContent = `Duplicated as "${newName}"`;
+        setTimeout(() => { els.fileInfo.textContent = ''; }, 3000);
+
+    } catch (err) {
+        alert(`Error duplicating file: ${err.message}`);
+    }
+}
+
+// Copy Path
+async function copyPath(path) {
+    if (!path) {
+        alert('Could not determine path.');
+        return;
+    }
+    try {
+        await navigator.clipboard.writeText(path);
+        els.fileInfo.textContent = 'Path copied to clipboard!';
+        setTimeout(() => { els.fileInfo.textContent = ''; }, 2000);
+    } catch (err) {
+        console.error('Failed to copy path:', err);
+        alert('Failed to copy path to clipboard');
+    }
+}
+
+// Show Properties
+async function showProperties(itemHandle, path) {
+    const modal = document.getElementById('propertiesModal');
+    const content = document.getElementById('propertiesContent');
+    const closeBtn = document.querySelector('.close-modal');
+    const btnClose = document.getElementById('btnCloseProperties');
+
+    // Reset content
+    content.innerHTML = '<p>Loading...</p>';
+    modal.style.display = 'block';
+
+    const closeModal = () => {
+        modal.style.display = 'none';
+    };
+
+    closeBtn.onclick = closeModal;
+    btnClose.onclick = closeModal;
+
+    // Close on outside click
+    window.onclick = (event) => {
+        if (event.target == modal) {
+            closeModal();
+        }
+    };
+
+    try {
+        let size = 'N/A';
+        let lastModified = 'N/A';
+        let type = itemHandle.kind === 'directory' ? 'Folder' : 'File';
+
+        if (itemHandle.kind === 'file') {
+            const file = await itemHandle.getFile();
+            size = (file.size / 1024).toFixed(2) + ' KB';
+            lastModified = new Date(file.lastModified).toLocaleString();
+            type = file.type || 'File';
+        }
+
+        // Display relative path limitation note
+        const pathDisplay = path ? path : 'Root';
+
+        content.innerHTML = `
+            <div class="property-row">
+                <span class="property-label">Name:</span>
+                <span class="property-value">${itemHandle.name}</span>
+            </div>
+            <div class="property-row">
+                <span class="property-label">Type:</span>
+                <span class="property-value">${type}</span>
+            </div>
+            <div class="property-row">
+                <span class="property-label">Path:</span>
+                <span class="property-value">${pathDisplay} <small style="color: #888; display: block; margin-top: 4px;">(Relative to opened folder)</small></span>
+            </div>
+            <div class="property-row">
+                <span class="property-label">Size:</span>
+                <span class="property-value">${size}</span>
+            </div>
+            <div class="property-row">
+                <span class="property-label">Modified:</span>
+                <span class="property-value">${lastModified}</span>
+            </div>
+        `;
+
+    } catch (err) {
+        content.innerHTML = `<p style="color: red">Error fetching properties: ${err.message}</p>`;
+    }
+}
+
 // Delete file or folder
 async function deleteItem(itemHandle, isDirectory, parentDirHandle) {
     const itemType = isDirectory ? 'folder' : 'file';
@@ -847,6 +1007,7 @@ els.fileList.addEventListener('contextmenu', (e) => {
     let fileItem = null;
     let targetHandle = currentDirHandle;
     let clickedItem = null;
+    let clickedItemPath = null;
     let isDir = false;
 
     // Traverse up to find what was clicked and its parent
@@ -856,6 +1017,7 @@ els.fileList.addEventListener('contextmenu', (e) => {
         if (!clickedItem && currentNode.classList && currentNode.classList.contains('file-item')) {
             fileItem = currentNode;
             clickedItem = currentNode._fileHandle;
+            clickedItemPath = currentNode.dataset.path;
             isDir = false;
         }
 
@@ -865,6 +1027,7 @@ els.fileList.addEventListener('contextmenu', (e) => {
             if (!clickedItem) {
                 folderItem = currentNode;
                 clickedItem = currentNode._dirHandle;
+                clickedItemPath = currentNode.dataset.path;
                 isDir = true;
                 // For a folder, the "parent" for creation is the folder itself
                 targetHandle = currentNode._dirHandle;
@@ -906,7 +1069,7 @@ els.fileList.addEventListener('contextmenu', (e) => {
 
     // Pass both handles to showContextMenu
     // We'll store deletionParentHandle in a new variable or property
-    showContextMenu(e.pageX, e.pageY, targetHandle, clickedItem, isDir, deletionParentHandle);
+    showContextMenu(e.pageX, e.pageY, targetHandle, clickedItem, isDir, deletionParentHandle, clickedItemPath);
 });
 
 // Context menu item clicks
@@ -924,6 +1087,7 @@ contextMenu.addEventListener('click', async (e) => {
     const savedClickedItem = contextMenuClickedItem;
     const savedIsDir = contextMenuClickedIsDir;
     const savedDeletionParent = contextMenuDeletionParent;
+    const savedPath = contextMenuClickedPath;
     hideContextMenu();
 
     if (!savedTarget) return;
@@ -937,6 +1101,15 @@ contextMenu.addEventListener('click', async (e) => {
         // Actually, savedDeletionParent should always be correct now.
         const parentToUse = savedDeletionParent || savedTarget;
         await deleteItem(savedClickedItem, savedIsDir, parentToUse);
+    } else if (action === 'rename' && savedClickedItem) {
+        await renameItem(savedClickedItem);
+    } else if (action === 'duplicate' && savedClickedItem) {
+        const parentToUse = savedDeletionParent || savedTarget;
+        await duplicateItem(savedClickedItem, savedIsDir, parentToUse);
+    } else if (action === 'copyPath' && savedPath) {
+        await copyPath(savedPath);
+    } else if (action === 'properties' && savedClickedItem) {
+        await showProperties(savedClickedItem, savedPath);
     }
 });
 
