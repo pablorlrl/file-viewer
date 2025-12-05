@@ -19,6 +19,7 @@ const els = {
     fileList: document.getElementById('fileList'),
     recentList: document.getElementById('recentList'),
     btnOpen: document.getElementById('btnOpen'),
+    btnRefresh: document.getElementById('btnRefresh'),
     btnLive: document.getElementById('btnLive'),
     searchBar: document.getElementById('searchBar'),
     fileInfo: document.getElementById('fileInfo'),
@@ -255,6 +256,7 @@ async function loadFolder(dirHandle) {
     els.fileList.innerHTML = '<li class="empty-msg">Loading...</li>';
     els.searchBar.style.display = 'block';
     els.searchBar.value = '';
+    els.btnRefresh.style.display = 'inline-block';
 
     try {
         const tree = await scanDirectory(dirHandle);
@@ -658,6 +660,15 @@ els.btnOpen.addEventListener('click', async () => {
     }
 });
 
+// Refresh button
+els.btnRefresh.addEventListener('click', async () => {
+    if (currentDirHandle) {
+        await loadFolder(currentDirHandle);
+        els.fileInfo.textContent = 'Folder refreshed';
+        setTimeout(() => { els.fileInfo.textContent = ''; }, 2000);
+    }
+});
+
 // Save button
 els.btnSave.addEventListener('click', saveFile);
 
@@ -964,6 +975,8 @@ async function copyPath(path) {
         alert('Failed to copy path to clipboard');
     }
 }
+
+
 
 // Show Properties
 async function showProperties(itemHandle, path) {
