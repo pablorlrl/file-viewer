@@ -223,16 +223,25 @@ body {
   width: 100%;
 }
 
-/* Ace Editor overrides */
-.ace_editor {
+/* CodeMirror Editor overrides */
+.CodeMirror {
   font-family: var(--font-code) !important;
-
+  height: 100% !important;
+  background-color: var(--bg-root) !important;
+  color: var(--text) !important;
 }
 
-.ace_gutter {
+.CodeMirror-gutters {
   background-color: var(--bg-root) !important;
-  color: #6e7681 !important;
   border-right: 1px solid var(--border) !important;
+}
+
+.CodeMirror-linenumber {
+  color: #6e7681 !important;
+}
+
+.CodeMirror-cursor {
+  border-left-color: var(--text) !important;
 }
 
 /* Scrollbars */
@@ -607,6 +616,7 @@ body.dragging #dragOverlay {
 #resizer:hover {
   background-color: var(--accent);
 }
+
 /* Boolean and null value highlighting - applies to ALL file formats */
 .ace_boolean.ace_true {
   color: #4caf50 !important;
@@ -625,12 +635,25 @@ body.dragging #dragOverlay {
 }
 
 /* Fix for JSON keys appearing green */
-.ace_string { color: #ce9178 !important; }
-.ace_variable { color: #9cdcfe !important; }
+.ace_string {
+  color: #ce9178 !important;
+}
+
+.ace_variable {
+  color: #9cdcfe !important;
+}
 
 /* Tree View Styles */
-.tree-children { display: none; list-style: none; padding-left: 16px; margin: 0; }
-.tree-children.expanded { display: block; }
+.tree-children {
+  display: none;
+  list-style: none;
+  padding-left: 16px;
+  margin: 0;
+}
+
+.tree-children.expanded {
+  display: block;
+}
 
 /* Context Menu */
 .context-menu {
