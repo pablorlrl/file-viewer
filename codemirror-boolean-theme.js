@@ -1,5 +1,6 @@
 // CodeMirror boolean and null value highlighting theme
-// Adds CSS styling for log file tokens and targets built-in tokens
+// Adds CSS styling for log file tokens and boolean values
+// Only applies to specific file types to avoid affecting other languages
 
 (function () {
     // Wait for CodeMirror to be loaded
@@ -8,8 +9,11 @@
         return;
     }
 
-    // Add custom CSS for log file highlighting and boolean values
+    console.log('🎨 Boolean theme script is running!');
+
+    // Add custom CSS - only applies when editor has special class
     const style = document.createElement('style');
+    style.id = 'boolean-highlight-theme';
     style.textContent = `
         /* Log file highlighting */
         .cm-log-fatal { color: #ff6b9d; font-weight: bold; text-decoration: underline; }
@@ -27,15 +31,61 @@
         .cm-log-url { color: #3794ff; text-decoration: underline; }
         .cm-log-ip { color: #b5cea8; }
         
-        /* Boolean highlighting for built-in CodeMirror tokens */
-        /* JSON mode uses .cm-atom for true/false/null */
-        .cm-atom { color: #4ec9b0 !important; font-weight: bold; }
+        /* Boolean highlighting using data attributes */
+        /* TRUE values - Green */
+        .CodeMirror.boolean-highlight [data-bool="true"] {
+            color: #4caf50 !important;
+            font-weight: bold !important;
+        }
         
-        /* YAML mode uses .cm-atom for booleans */
-        /* XML mode uses .cm-atom for attribute values */
-        /* Properties mode uses .cm-atom for values */
+        /* FALSE values - Orange */
+        .CodeMirror.boolean-highlight [data-bool="false"] {
+            color: #ff9800 !important;
+            font-weight: bold !important;
+        }
+        
+        /* NULL values - Gray italic */
+        .CodeMirror.boolean-highlight [data-bool="null"] {
+            color: #858585 !important;
+            font-style: italic !important;
+        }
     `;
     document.head.appendChild(style);
 
-    console.log('CodeMirror boolean/log theme loaded');
+    console.log('✅ Boolean theme CSS added to page!');
+
+    // Function to tag boolean spans
+    function tagBooleanSpans(wrapper) {
+        const spans = wrapper.querySelectorAll('.cm-atom, .cm-keyword, .cm-quote');
+        spans.forEach(span => {
+            const text = span.textContent.trim().toLowerCase();
+            if (text === 'true') {
+                span.setAttribute('data-bool', 'true');
+            } else if (text === 'false') {
+                span.setAttribute('data-bool', 'false');
+            } else if (text === 'null' || text === 'nil' || text === 'none') {
+                span.setAttribute('data-bool', 'null');
+            }
+        });
+    }
+
+    // Make function globally available to add/remove boolean highlighting
+    window.setBooleanHighlight = function (editor, enabled) {
+        if (!editor) return;
+        const wrapper = editor.getWrapperElement();
+
+        if (enabled) {
+            wrapper.classList.add('boolean-highlight');
+
+            // Tag spans initially
+            setTimeout(() => tagBooleanSpans(wrapper), 100);
+
+            // Re-tag on changes
+            editor.on('change', () => {
+                setTimeout(() => tagBooleanSpans(wrapper), 50);
+            });
+        } else {
+            wrapper.classList.remove('boolean-highlight');
+        }
+    };
 })();

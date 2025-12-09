@@ -178,6 +178,13 @@ function createEditor(content, filename) {
             suppressChangeEvents = false;
         }
     }
+    
+    // Apply boolean highlighting for specific file types
+    const ext = filename.split('.').pop().toLowerCase();
+    const needsBooleanHighlight = ['json', 'yaml', 'yml', 'ini'].includes(ext);
+    if (typeof window.setBooleanHighlight === 'function') {
+        window.setBooleanHighlight(editor, needsBooleanHighlight);
+    }
 }
 
 function checkForChanges() {
